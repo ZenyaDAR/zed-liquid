@@ -3,8 +3,7 @@ use zed::settings::LspSettings;
 use zed_extension_api::{self as zed, LanguageServerId, Result};
 
 const PACKAGE_NAME: &str = "@shopify/theme-language-server-node";
-const PACKAGE_ENTRY: &str =
-    "node_modules/@shopify/theme-language-server-node/dist/index.js";
+const PACKAGE_ENTRY: &str = "node_modules/@shopify/theme-language-server-node/dist/index.js";
 const SERVER_WRAPPER: &str = "run_server.js";
 
 struct LiquidExtension {
@@ -124,9 +123,7 @@ impl zed::Extension for LiquidExtension {
     }
 }
 
-fn merge_workspace_config(
-    user_settings: Option<zed::serde_json::Value>,
-) -> zed::serde_json::Value {
+fn merge_workspace_config(user_settings: Option<zed::serde_json::Value>) -> zed::serde_json::Value {
     let defaults = zed::serde_json::json!({
         "shopifyLiquid": {
             "onlySingleFileChecks": false,
@@ -184,7 +181,10 @@ mod tests {
         });
         let result = merge_workspace_config(Some(user));
         assert_eq!(result["shopifyLiquid"]["onlySingleFileChecks"], true);
-        assert_eq!(result["shopifyLiquid"]["disabledChecks"][0], "MissingTemplate");
+        assert_eq!(
+            result["shopifyLiquid"]["disabledChecks"][0],
+            "MissingTemplate"
+        );
     }
 
     #[test]

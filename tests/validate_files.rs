@@ -26,7 +26,10 @@ fn required_files_exist() {
 fn extension_toml_has_correct_structure() {
     let content = fs::read_to_string("extension.toml").unwrap();
     assert!(content.contains(r#"id = "liquid""#), "missing id");
-    assert!(content.contains("[grammars.liquid]"), "missing grammar declaration");
+    assert!(
+        content.contains("[grammars.liquid]"),
+        "missing grammar declaration"
+    );
     assert!(
         content.contains("[language_servers.shopify-theme-ls]"),
         "missing language server declaration"
@@ -49,10 +52,7 @@ fn extension_toml_version_is_semver() {
         .find(|l| l.starts_with("version"))
         .expect("no version line in extension.toml");
     // Expect: version = "X.Y.Z"
-    let version = version_line
-        .split('"')
-        .nth(1)
-        .expect("version not quoted");
+    let version = version_line.split('"').nth(1).expect("version not quoted");
     let parts: Vec<&str> = version.split('.').collect();
     assert_eq!(parts.len(), 3, "version must be X.Y.Z, got: {version}");
     for part in &parts {
@@ -115,7 +115,9 @@ fn highlights_contains_all_required_capture_types() {
 #[test]
 fn highlights_covers_core_liquid_keywords() {
     let content = fs::read_to_string("languages/liquid/highlights.scm").unwrap();
-    for keyword in ["if", "for", "unless", "assign", "render", "schema", "capture"] {
+    for keyword in [
+        "if", "for", "unless", "assign", "render", "schema", "capture",
+    ] {
         assert!(
             content.contains(&format!("\"{keyword}\"")),
             "highlights.scm missing keyword: {keyword}"
@@ -195,10 +197,10 @@ fn folds_covers_core_liquid_blocks() {
         "schema_statement",
         "javascript_statement",
     ] {
-        assert!(
-            content.contains(node),
-            "folds.scm missing fold for: {node}"
-        );
+        assert!(content.contains(node), "folds.scm missing fold for: {node}");
     }
-    assert!(content.contains("@fold"), "folds.scm must use @fold capture");
+    assert!(
+        content.contains("@fold"),
+        "folds.scm must use @fold capture"
+    );
 }
