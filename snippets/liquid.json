@@ -33,6 +33,17 @@
     "body": ["{% unless ${1:condition} %}", "\t$0", "{% endunless %}"],
     "description": "unless statement"
   },
+  "unless/else": {
+    "prefix": "unle",
+    "body": [
+      "{% unless ${1:condition} %}",
+      "\t$2",
+      "{% else %}",
+      "\t$0",
+      "{% endunless %}"
+    ],
+    "description": "unless/else statement"
+  },
   "for": {
     "prefix": "for",
     "body": ["{% for ${1:item} in ${2:collection} %}", "\t$0", "{% endfor %}"],
@@ -46,6 +57,20 @@
       "{% endfor %}"
     ],
     "description": "for loop with limit and offset"
+  },
+  "tablerow": {
+    "prefix": "tablerow",
+    "body": [
+      "{% tablerow ${1:item} in ${2:collection} %}",
+      "\t$0",
+      "{% endtablerow %}"
+    ],
+    "description": "tablerow loop (renders an HTML table row per item)"
+  },
+  "cycle": {
+    "prefix": "cycle",
+    "body": ["{% cycle '${1:one}', '${2:two}', '${3:three}' %}"],
+    "description": "cycle — rotates through values on each iteration"
   },
   "assign": {
     "prefix": "assign",
@@ -68,6 +93,11 @@
       "{% endcase %}"
     ],
     "description": "case/when statement"
+  },
+  "include": {
+    "prefix": "include",
+    "body": ["{% include '${1:snippet}'${2:, ${3:param}: ${4:value}} %}"],
+    "description": "include snippet (deprecated — prefer render)"
   },
   "render": {
     "prefix": "render",
@@ -190,5 +220,40 @@
     "prefix": "t",
     "body": ["{{ '${1:key}' | t }}"],
     "description": "translation filter"
+  },
+  "date filter": {
+    "prefix": "{{date",
+    "body": ["{{ ${1:variable} | date: '${2:%B %d, %Y}' }}"],
+    "description": "output variable formatted as date"
+  },
+  "money filter": {
+    "prefix": "{{money",
+    "body": ["{{ ${1:variable} | money }}"],
+    "description": "output price formatted as money"
+  },
+  "money with currency filter": {
+    "prefix": "{{moneyc",
+    "body": ["{{ ${1:variable} | money_with_currency }}"],
+    "description": "output price formatted as money with currency"
+  },
+  "default filter": {
+    "prefix": "{{def",
+    "body": ["{{ ${1:variable} | default: '${2:fallback}' }}"],
+    "description": "output variable with fallback default value"
+  },
+  "truncate filter": {
+    "prefix": "{{trunc",
+    "body": ["{{ ${1:variable} | truncate: ${2:100} }}"],
+    "description": "output variable truncated to N characters"
+  },
+  "assign where": {
+    "prefix": "assignw",
+    "body": ["{% assign ${1:result} = ${2:collection} | where: '${3:property}', '${4:value}' %}"],
+    "description": "assign filtered array using where filter"
+  },
+  "assign map": {
+    "prefix": "assignm",
+    "body": ["{% assign ${1:result} = ${2:collection} | map: '${3:property}' %}"],
+    "description": "assign mapped array of a single property"
   }
 }

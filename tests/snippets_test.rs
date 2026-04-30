@@ -63,7 +63,7 @@ fn core_control_flow_snippets_exist() {
 fn core_shopify_snippets_exist() {
     let snippets = load_snippets();
     let obj = snippets.as_object().unwrap();
-    for name in ["render", "section", "schema", "paginate", "form", "layout"] {
+    for name in ["render", "section", "schema", "paginate", "form", "layout", "tablerow", "include"] {
         assert!(obj.contains_key(name), "missing Shopify snippet: '{name}'");
     }
 }
@@ -84,6 +84,8 @@ fn block_snippets_have_matching_end_tags() {
         ("comment", "endcomment"),
         ("raw", "endraw"),
         ("form", "endform"),
+        ("tablerow", "endtablerow"),
+        ("unless/else", "endunless"),
     ];
     for (name, end_tag) in pairs {
         let snippet = &snippets[name];
@@ -230,7 +232,7 @@ fn body_does_not_have_trailing_or_leading_empty_lines() {
 #[test]
 fn block_snippets_have_final_tab_stop() {
     let snippets = load_snippets();
-    let block_names = ["if", "for", "unless", "case/when", "paginate", "form"];
+    let block_names = ["if", "for", "unless", "unless/else", "case/when", "paginate", "form", "tablerow"];
 
     let obj = snippets.as_object().unwrap();
 

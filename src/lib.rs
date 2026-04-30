@@ -120,28 +120,76 @@ impl zed::Extension for LiquidExtension {
             .ok()
             .and_then(|s| s.settings);
 
-        // Merge user settings on top of defaults so the server always gets
-        // the options it needs for full project-level completions.
-        let defaults = zed::serde_json::json!({
-            "shopifyLiquid": {
-                "onlySingleFileChecks": false,
-                "disabledChecks": []
-            }
-        });
+        Ok(Some(merge_workspace_config(user_settings)))
+    }
+}
 
-        Ok(Some(match user_settings {
-            Some(zed::serde_json::Value::Object(mut user_map)) => {
-                if let zed::serde_json::Value::Object(default_map) = defaults {
-                    for (k, v) in default_map {
-                        user_map.entry(k).or_insert(v);
-                    }
+fn merge_workspace_config(
+    user_settings: Option<zed::serde_json::Value>,
+) -> zed::serde_json::Value {
+    let defaults = zed::serde_json::json!({
+        "shopifyLiquid": {
+            "onlySingleFileChecks": false,
+            "disabledChecks": []
+        }
+    });
+
+    match user_settings {
+        Some(zed::serde_json::Value::Object(mut user_map)) => {
+            if let zed::serde_json::Value::Object(default_map) = defaults {
+                for (k, v) in default_map {
+                    user_map.entry(k).or_insert(v);
                 }
-                zed::serde_json::Value::Object(user_map)
             }
-            Some(other) => other,
-            None => defaults,
-        }))
+            zed::serde_json::Value::Object(user_map)
+        }
+        Some(other) => other,
+        None => defaults,
     }
 }
 
 zed::register_extension!(LiquidExtension);
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use zed_extension_api::serde_json::json;
+
+    #[test]
+    fn defaults_returned_when_no_user_settings() {
+        let result = merge_workspace_config(None);
+        assert_eq!(result["shopifyLiquid"]["onlySingleFileChecks"], false);
+        assert!(result["shopifyLiquid"]["disabledChecks"].is_array());
+        assert!(result["shopifyLiquid"]["disabledChecks"]
+            .as_array()
+            .unwrap()
+            .is_empty());
+    }
+
+    #[test]
+    fn user_object_gets_defaults_inserted_for_missing_keys() {
+        let user = json!({ "myExtension": { "enabled": true } });
+        let result = merge_workspace_config(Some(user));
+        assert_eq!(result["myExtension"]["enabled"], true);
+        assert_eq!(result["shopifyLiquid"]["onlySingleFileChecks"], false);
+    }
+
+    #[test]
+    fn user_shopify_liquid_key_is_not_overwritten_by_defaults() {
+        let user = json!({
+            "shopifyLiquid": {
+                "onlySingleFileChecks": true,
+                "disabledChecks": ["MissingTemplate"]
+            }
+        });
+        let result = merge_workspace_config(Some(user));
+        assert_eq!(result["shopifyLiquid"]["onlySingleFileChecks"], true);
+        assert_eq!(result["shopifyLiquid"]["disabledChecks"][0], "MissingTemplate");
+    }
+
+    #[test]
+    fn non_object_user_settings_returned_unchanged() {
+        let result = merge_workspace_config(Some(json!(null)));
+        assert!(result.is_null());
+    }
+}

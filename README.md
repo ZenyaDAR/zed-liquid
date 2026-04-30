@@ -7,8 +7,10 @@
 - **Syntax highlighting** — Liquid tags, filters, variables, operators, literals, comments, and doc-tags
 - **Embedded languages** — HTML, CSS, JavaScript, JSON, and YAML highlighted inside appropriate Liquid blocks
 - **Language server** — Shopify Theme Language Server: completions, hover docs, go-to-definition, diagnostics
-- **Snippets** — 29 snippets for every common Liquid pattern
+- **Snippets** — 40 snippets for every common Liquid and Shopify theme pattern
+- **Code folding** — fold any Liquid block tag (`if`, `for`, `schema`, `javascript`, `comment`, and more)
 - **Bracket matching** — autoclosing brackets and quotes with Liquid-aware context
+- **Formatting** — Prettier with `liquid-html` parser (requires `@shopify/prettier-plugin-liquid` in your project)
 
 ## Requirements
 
@@ -55,37 +57,70 @@ Configure via Zed's `settings.json`:
 
 ## Snippets
 
+### Control flow
+
 | Prefix | Expands to |
 |--------|-----------|
 | `if` | `{% if condition %}…{% endif %}` |
 | `ife` | if / else |
 | `ifee` | if / elsif / else |
 | `unless` | unless block |
+| `unle` | unless / else |
 | `for` | for loop |
 | `forl` | for loop with `limit` and `offset` |
-| `assign` | assign variable |
-| `capture` | capture block |
+| `tablerow` | tablerow loop (HTML table rows) |
+| `cycle` | `{% cycle 'a', 'b', 'c' %}` |
 | `case` | case / when statement |
+
+### Variables
+
+| Prefix | Expands to |
+|--------|-----------|
+| `assign` | assign variable |
+| `assignw` | assign filtered array via `where:` |
+| `assignm` | assign mapped array via `map:` |
+| `capture` | capture block |
+| `increment` | increment variable |
+| `decrement` | decrement variable |
+
+### Output & filters
+
+| Prefix | Expands to |
+|--------|-----------|
+| `{{` | `{{ variable }}` |
+| `{{f` | `{{ variable \| filter }}` |
+| `{{date` | `{{ variable \| date: '%B %d, %Y' }}` |
+| `{{money` | `{{ variable \| money }}` |
+| `{{moneyc` | `{{ variable \| money_with_currency }}` |
+| `{{def` | `{{ variable \| default: 'fallback' }}` |
+| `{{trunc` | `{{ variable \| truncate: 100 }}` |
+| `t` | `{{ 'key' \| t }}` translation |
+| `echo` | `{% echo variable %}` |
+
+### Shopify theme
+
+| Prefix | Expands to |
+|--------|-----------|
 | `render` | render snippet |
 | `renderw` | render snippet with parameter |
+| `include` | include snippet (deprecated — prefer `render`) |
 | `section` | section tag |
 | `sections` | sections tag |
 | `paginate` | paginate block |
-| `comment` | comment block |
-| `raw` | raw block |
-| `schema` | schema block |
-| `javascript` | javascript block |
-| `stylesheet` | stylesheet block |
-| `style` | style block |
-| `echo` | echo tag |
-| `liquid` | liquid tag (multi-statement) |
-| `increment` | increment variable |
-| `decrement` | decrement variable |
-| `layout` | layout tag |
 | `form` | form tag |
-| `{{` | output variable |
-| `{{f` | output variable with filter |
-| `t` | translation filter |
+| `layout` | layout tag |
+| `schema` | schema block with settings/presets |
+
+### Embedded blocks
+
+| Prefix | Expands to |
+|--------|-----------|
+| `javascript` | `{% javascript %}…{% endjavascript %}` |
+| `stylesheet` | `{% stylesheet %}…{% endstylesheet %}` |
+| `style` | `{% style %}…{% endstyle %}` |
+| `raw` | `{% raw %}…{% endraw %}` |
+| `comment` | `{% comment %}…{% endcomment %}` |
+| `liquid` | `{% liquid … %}` multi-statement block |
 
 ## Grammar
 

@@ -10,9 +10,12 @@ fn required_files_exist() {
         "languages/liquid/config.toml",
         "languages/liquid/highlights.scm",
         "languages/liquid/injections.scm",
+        "languages/liquid/folds.scm",
         "snippets/liquid.json",
         "LICENSE",
         "README.md",
+        "CHANGELOG.md",
+        "CONTRIBUTING.md",
     ];
     for path in files {
         assert!(Path::new(path).exists(), "required file missing: {path}");
@@ -177,4 +180,25 @@ fn lib_rs_implements_both_lsp_startup_strategies() {
         content.contains("node_binary_path"),
         "lib.rs must use bundled Node for npm fallback"
     );
+}
+
+#[test]
+fn folds_covers_core_liquid_blocks() {
+    let content = fs::read_to_string("languages/liquid/folds.scm").unwrap();
+    for node in [
+        "if_statement",
+        "unless_statement",
+        "for_loop_statement",
+        "capture_statement",
+        "case_statement",
+        "form_statement",
+        "schema_statement",
+        "javascript_statement",
+    ] {
+        assert!(
+            content.contains(node),
+            "folds.scm missing fold for: {node}"
+        );
+    }
+    assert!(content.contains("@fold"), "folds.scm must use @fold capture");
 }
