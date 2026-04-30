@@ -1,0 +1,20 @@
+name = "Liquid"
+grammar = "liquid"
+path_suffixes = ["liquid"]
+autoclose_before = "})]'\""
+block_comment = { start = "{% comment %}", prefix = "", end = "{% endcomment %}", tab_size = 2 }
+
+brackets = [
+    { start = "{", end = "}", close = true, newline = true },
+    { start = "[", end = "]", close = true, newline = true },
+    { start = "(", end = ")", close = true, newline = true },
+    { start = "\"", end = "\"", close = true, newline = false, not_in = ["comment", "string"] },
+    { start = "'", end = "'", close = true, newline = false, not_in = ["comment", "string"] },
+    { start = "<", end = ">", close = false, newline = true, not_in = ["comment", "string"] },
+]
+
+completion_query_characters = ["-", "_", "."]
+prettier_parser_name = "liquid-html"
+
+[overrides.default]
+linked_edit_characters = ["-"]

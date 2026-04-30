@@ -1,0 +1,194 @@
+{
+  "if": {
+    "prefix": "if",
+    "body": ["{% if ${1:condition} %}", "\t$0", "{% endif %}"],
+    "description": "if statement"
+  },
+  "if/else": {
+    "prefix": "ife",
+    "body": [
+      "{% if ${1:condition} %}",
+      "\t$2",
+      "{% else %}",
+      "\t$0",
+      "{% endif %}"
+    ],
+    "description": "if/else statement"
+  },
+  "if/elsif/else": {
+    "prefix": "ifee",
+    "body": [
+      "{% if ${1:condition} %}",
+      "\t$2",
+      "{% elsif ${3:condition} %}",
+      "\t$4",
+      "{% else %}",
+      "\t$0",
+      "{% endif %}"
+    ],
+    "description": "if/elsif/else statement"
+  },
+  "unless": {
+    "prefix": "unless",
+    "body": ["{% unless ${1:condition} %}", "\t$0", "{% endunless %}"],
+    "description": "unless statement"
+  },
+  "for": {
+    "prefix": "for",
+    "body": ["{% for ${1:item} in ${2:collection} %}", "\t$0", "{% endfor %}"],
+    "description": "for loop"
+  },
+  "for with limit/offset": {
+    "prefix": "forl",
+    "body": [
+      "{% for ${1:item} in ${2:collection} limit: ${3:5} offset: ${4:0} %}",
+      "\t$0",
+      "{% endfor %}"
+    ],
+    "description": "for loop with limit and offset"
+  },
+  "assign": {
+    "prefix": "assign",
+    "body": ["{% assign ${1:variable} = ${2:value} %}"],
+    "description": "assign variable"
+  },
+  "capture": {
+    "prefix": "capture",
+    "body": ["{% capture ${1:variable} %}", "\t$0", "{% endcapture %}"],
+    "description": "capture block"
+  },
+  "case/when": {
+    "prefix": "case",
+    "body": [
+      "{% case ${1:variable} %}",
+      "  {% when ${2:value} %}",
+      "\t$3",
+      "  {% when ${4:value} %}",
+      "\t$0",
+      "{% endcase %}"
+    ],
+    "description": "case/when statement"
+  },
+  "render": {
+    "prefix": "render",
+    "body": ["{% render '${1:snippet}'${2:, ${3:param}: ${4:value}} %}"],
+    "description": "render snippet"
+  },
+  "render with": {
+    "prefix": "renderw",
+    "body": [
+      "{% render '${1:snippet}', ${2:param}: ${3:value} %}"
+    ],
+    "description": "render snippet with parameter"
+  },
+  "section": {
+    "prefix": "section",
+    "body": ["{% section '${1:name}' %}"],
+    "description": "section tag"
+  },
+  "sections": {
+    "prefix": "sections",
+    "body": ["{% sections '${1:name}' %}"],
+    "description": "sections tag"
+  },
+  "paginate": {
+    "prefix": "paginate",
+    "body": [
+      "{% paginate ${1:collection} by ${2:12} %}",
+      "\t$0",
+      "{% endpaginate %}"
+    ],
+    "description": "paginate block"
+  },
+  "comment": {
+    "prefix": "comment",
+    "body": ["{% comment %}", "\t$0", "{% endcomment %}"],
+    "description": "comment block"
+  },
+  "raw": {
+    "prefix": "raw",
+    "body": ["{% raw %}", "\t$0", "{% endraw %}"],
+    "description": "raw block (no Liquid processing)"
+  },
+  "schema": {
+    "prefix": "schema",
+    "body": [
+      "{% schema %}",
+      "{",
+      "\t\"name\": \"${1:Section name}\",",
+      "\t\"settings\": [",
+      "\t\t$0",
+      "\t],",
+      "\t\"presets\": [",
+      "\t\t{ \"name\": \"${2:Default}\" }",
+      "\t]",
+      "}",
+      "{% endschema %}"
+    ],
+    "description": "schema block"
+  },
+  "javascript": {
+    "prefix": "javascript",
+    "body": ["{% javascript %}", "\t$0", "{% endjavascript %}"],
+    "description": "javascript block"
+  },
+  "stylesheet": {
+    "prefix": "stylesheet",
+    "body": ["{% stylesheet %}", "\t$0", "{% endstylesheet %}"],
+    "description": "stylesheet block"
+  },
+  "style": {
+    "prefix": "style",
+    "body": ["{% style %}", "\t$0", "{% endstyle %}"],
+    "description": "style block"
+  },
+  "echo": {
+    "prefix": "echo",
+    "body": ["{% echo ${1:variable} %}"],
+    "description": "echo tag"
+  },
+  "liquid tag": {
+    "prefix": "liquid",
+    "body": [
+      "{% liquid",
+      "\t${1:assign var = 'value'}",
+      "%}"
+    ],
+    "description": "liquid tag (multiple statements)"
+  },
+  "increment": {
+    "prefix": "increment",
+    "body": ["{% increment ${1:variable} %}"],
+    "description": "increment variable"
+  },
+  "decrement": {
+    "prefix": "decrement",
+    "body": ["{% decrement ${1:variable} %}"],
+    "description": "decrement variable"
+  },
+  "layout": {
+    "prefix": "layout",
+    "body": ["{% layout ${1:'theme'} %}"],
+    "description": "layout tag"
+  },
+  "form": {
+    "prefix": "form",
+    "body": ["{% form '${1:type}'${2:, ${3:object}} %}", "\t$0", "{% endform %}"],
+    "description": "form tag"
+  },
+  "output variable": {
+    "prefix": "{{",
+    "body": ["{{ ${1:variable} }}"],
+    "description": "output Liquid variable"
+  },
+  "output with filter": {
+    "prefix": "{{f",
+    "body": ["{{ ${1:variable} | ${2:filter} }}"],
+    "description": "output variable with filter"
+  },
+  "t filter": {
+    "prefix": "t",
+    "body": ["{{ '${1:key}' | t }}"],
+    "description": "translation filter"
+  }
+}

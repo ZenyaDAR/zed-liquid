@@ -1,0 +1,12 @@
+# Rust build artifacts
+/target/
+
+# npm artifacts from LSP fallback install
+/node_modules/
+/run_server.js
+
+# Local tree-sitter grammar source (fetched automatically by Zed)
+grammars/liquid/
+
+
+docs/
