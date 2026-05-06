@@ -8,6 +8,8 @@
 - **Embedded languages** — HTML, CSS, JavaScript, JSON, and YAML highlighted inside appropriate Liquid blocks
 - **Language server** — Shopify Theme Language Server: completions, hover docs, go-to-definition, diagnostics
 - **Snippets** — 40 snippets for every common Liquid and Shopify theme pattern
+- **Document outline** — navigate to `render`/`section`/`schema`/`for`/`capture` landmarks in the outline panel
+- **Auto-indentation** — block tags (`if`, `for`, `unless`, `case`, `capture`, etc.) auto-indent their body
 - **Code folding** — fold any Liquid block tag (`if`, `for`, `schema`, `javascript`, `comment`, and more)
 - **Bracket matching** — autoclosing brackets and quotes with Liquid-aware context
 - **Formatting** — Prettier with `liquid-html` parser (requires `@shopify/prettier-plugin-liquid` in your project)

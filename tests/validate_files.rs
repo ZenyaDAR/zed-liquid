@@ -11,6 +11,8 @@ fn required_files_exist() {
         "languages/liquid/highlights.scm",
         "languages/liquid/injections.scm",
         "languages/liquid/folds.scm",
+        "languages/liquid/outline.scm",
+        "languages/liquid/indents.scm",
         "snippets/liquid.json",
         "LICENSE",
         "README.md",
@@ -202,5 +204,43 @@ fn folds_covers_core_liquid_blocks() {
     assert!(
         content.contains("@fold"),
         "folds.scm must use @fold capture"
+    );
+}
+
+#[test]
+fn outline_covers_key_render_and_section_patterns() {
+    let content = fs::read_to_string("languages/liquid/outline.scm").unwrap();
+    assert!(
+        content.contains("render_statement"),
+        "outline.scm must expose render_statement items"
+    );
+    assert!(
+        content.contains("section_statement"),
+        "outline.scm must expose section_statement items"
+    );
+    assert!(
+        content.contains("schema_statement"),
+        "outline.scm must expose schema_statement as a navigation landmark"
+    );
+    assert!(
+        content.contains("@name"),
+        "outline.scm must use @name capture for display labels"
+    );
+    assert!(
+        content.contains("@item"),
+        "outline.scm must use @item capture to mark outline entries"
+    );
+}
+
+#[test]
+fn indents_marks_block_node_for_indentation() {
+    let content = fs::read_to_string("languages/liquid/indents.scm").unwrap();
+    assert!(
+        content.contains("(block)"),
+        "indents.scm must match the (block) AST node"
+    );
+    assert!(
+        content.contains("@indent"),
+        "indents.scm must use @indent capture"
     );
 }
