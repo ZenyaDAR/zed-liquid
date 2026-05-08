@@ -81,22 +81,25 @@
  (#set! priority 101))
 
 ; ── Logical / comparison operators used as keywords ───────────────────────────
+; priority 103 so they win over (predicate operator: _) at 102
 ([
   "and"
   "contains"
   "in"
   "or"
   ] @keyword.operator
- (#set! priority 101))
+ (#set! priority 103))
 
 ; ── Operators ─────────────────────────────────────────────────────────────────
 ([
   "|"
   ":"
   "="
-  (predicate)
   ] @operator
  (#set! priority 101))
+
+; Capture only the operator field inside a predicate node (==, !=, <, >, etc.)
+(predicate operator: _ @operator (#set! priority 102))
 
 ; ── Primitives ────────────────────────────────────────────────────────────────
 ((identifier) @variable              (#set! priority 101))
@@ -107,6 +110,81 @@
 ; ── Filters: the name after | is a function call ─────────────────────────────
 (filter
   name: (identifier) @function.call  (#set! priority 101))
+
+; ── Object property access: product.title, cart.items ───────────────────────
+(access
+  "." @punctuation.delimiter
+  (#set! priority 102))
+
+(access
+  property: (identifier) @property
+  (#set! priority 102))
+
+; ── Liquid special constants ──────────────────────────────────────────────────
+((identifier) @constant.builtin
+  (#match? @constant.builtin "^(nil|null|blank|empty)$")
+  (#set! priority 103))
+
+; ── layout none — disable layout sentinel ───────────────────────────────────
+(layout_statement "none" @constant.builtin (#set! priority 102))
+
+; ── File/snippet references — semantically paths, not data ──────────────────
+(render_statement
+  file: (string) @string.special
+  (#set! priority 102))
+
+(section_statement
+  (string) @string.special
+  (#set! priority 102))
+
+(sections_statement
+  (string) @string.special
+  (#set! priority 102))
+
+(include_statement
+  (string) @string.special
+  (#set! priority 102))
+
+; ── Liquid built-in loop objects ─────────────────────────────────────────────
+((identifier) @variable.builtin
+  (#match? @variable.builtin "^(forloop|tablerowloop|paginate)$")
+  (#set! priority 103))
+
+; ── Shopify global template objects ──────────────────────────────────────────
+((identifier) @type
+  (#match? @type
+   "^(product|variant|collection|collections|cart|checkout|customer|shop|request|theme|settings|block|section|all_products|articles|blogs|linklists|pages|routes|template|search|localization|handle|canonical_url|powered_by_link|scripts|content_for_additional_fonts)$")
+  (#set! priority 102))
+
+; ── Variable declarations (lvalue positions) ─────────────────────────────────
+(assignment_statement
+  variable_name: (identifier) @variable.special
+  (#set! priority 103))
+
+(for_loop_statement
+  item: (identifier) @variable.special
+  (#set! priority 103))
+
+(tablerow_statement
+  item: (identifier) @variable.special
+  (#set! priority 103))
+
+(capture_statement
+  variable: (identifier) @variable.special
+  (#set! priority 103))
+
+(increment_statement (identifier) @variable.special (#set! priority 103))
+(decrement_statement (identifier) @variable.special (#set! priority 103))
+
+; ── Named argument keys (param: value) ───────────────────────────────────────
+(argument
+  key: (identifier) @property
+  (#set! priority 102))
+
+; ── Range operator ───────────────────────────────────────────────────────────
+(range ".." @operator (#set! priority 102))
+(range "(" @punctuation.bracket (#set! priority 102))
+(range ")" @punctuation.bracket (#set! priority 102))
 
 ; ── Raw block content — shown as plain text ───────────────────────────────────
 (raw_statement

@@ -24,3 +24,15 @@
 ; ── {% capture variable %} — show the variable being built ───────────────────
 (capture_statement
   variable: (identifier) @name) @item
+
+; ── {% form 'type' %} — show form type in outline ────────────────────────────
+(form_statement
+  type: (string) @name) @item
+
+; ── {% paginate collection by N %} — show paginated collection ───────────────
+(paginate_statement
+  item: (identifier) @name) @item
+
+; ── {% if condition %} — show condition in outline ───────────────────────────
+(if_statement
+  condition: (_) @name) @item

@@ -255,5 +255,95 @@
     "prefix": "assignm",
     "body": ["{% assign ${1:result} = ${2:collection} | map: '${3:property}' %}"],
     "description": "assign mapped array of a single property"
+  },
+  "asset url": {
+    "prefix": "asset",
+    "body": ["{{ '${1:file.css}' | asset_url }}"],
+    "description": "output asset URL"
+  },
+  "stylesheet link": {
+    "prefix": "assetlink",
+    "body": ["{{ '${1:style.css}' | asset_url | stylesheet_tag }}"],
+    "description": "output asset as <link> stylesheet tag"
+  },
+  "image_tag": {
+    "prefix": "imgtag",
+    "body": ["{{ ${1:image} | image_url: width: ${2:800} | image_tag: alt: '${3:alt}' }}"],
+    "description": "responsive image with image_url + image_tag"
+  },
+  "content_for_header": {
+    "prefix": "cfh",
+    "body": ["{{ content_for_header }}"],
+    "description": "Shopify header hook (required in <head>)"
+  },
+  "content_for_layout": {
+    "prefix": "cfl",
+    "body": ["{{ content_for_layout }}"],
+    "description": "Shopify main content hook (required in layout)"
+  },
+  "content_for_index": {
+    "prefix": "cfi",
+    "body": ["{{ content_for_index }}"],
+    "description": "Shopify home page sections hook"
+  },
+  "script_tag filter": {
+    "prefix": "scripttag",
+    "body": ["{{ '${1:app.js}' | asset_url | script_tag }}"],
+    "description": "output asset as <script> tag"
+  },
+  "escape filter": {
+    "prefix": "{{esc",
+    "body": ["{{ ${1:variable} | escape }}"],
+    "description": "HTML-escape output"
+  },
+  "strip_html filter": {
+    "prefix": "{{strip",
+    "body": ["{{ ${1:variable} | strip_html }}"],
+    "description": "strip HTML tags"
+  },
+  "handle filter": {
+    "prefix": "{{handle",
+    "body": ["{{ ${1:variable} | handle }}"],
+    "description": "URL-safe handle"
+  },
+  "size filter": {
+    "prefix": "{{size",
+    "body": ["{{ ${1:variable} | size }}"],
+    "description": "count of array/string"
+  },
+  "assign sort": {
+    "prefix": "assignsort",
+    "body": ["{% assign ${1:result} = ${2:array} | sort: '${3:property}' %}"],
+    "description": "sorted array"
+  },
+  "assign first": {
+    "prefix": "assignfirst",
+    "body": ["{% assign ${1:result} = ${2:array} | where: '${3:prop}', '${4:val}' | first %}"],
+    "description": "first matching item"
+  },
+  "full section template": {
+    "prefix": "section-template",
+    "body": [
+      "<div class=\"${1:section-name}\">",
+      "\t$0",
+      "</div>",
+      "",
+      "{% schema %}",
+      "{",
+      "\t\"name\": \"${2:Section Name}\",",
+      "\t\"tag\": \"section\",",
+      "\t\"class\": \"${1:section-name}\",",
+      "\t\"settings\": [],",
+      "\t\"presets\": [{ \"name\": \"${2:Section Name}\" }]",
+      "}",
+      "{% endschema %}",
+      "",
+      "{% stylesheet %}",
+      "{% endstylesheet %}",
+      "",
+      "{% javascript %}",
+      "{% endjavascript %}"
+    ],
+    "description": "full Shopify section boilerplate"
   }
 }

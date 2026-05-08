@@ -1,5 +1,8 @@
 # Liquid for Zed
 
+[![version](https://img.shields.io/github/v/tag/ZenyaDAR/zed-liquid?label=version)](https://github.com/ZenyaDAR/zed-liquid/releases)
+[![ci](https://img.shields.io/github/actions/workflow/status/ZenyaDAR/zed-liquid/ci.yml?label=ci)](https://github.com/ZenyaDAR/zed-liquid/actions/workflows/ci.yml)
+
 [Liquid](https://shopify.github.io/liquid/) template language support for the [Zed](https://zed.dev) editor, built for Shopify theme development.
 
 ## Features
@@ -7,7 +10,7 @@
 - **Syntax highlighting** — Liquid tags, filters, variables, operators, literals, comments, and doc-tags
 - **Embedded languages** — HTML, CSS, JavaScript, JSON, and YAML highlighted inside appropriate Liquid blocks
 - **Language server** — Shopify Theme Language Server: completions, hover docs, go-to-definition, diagnostics
-- **Snippets** — 40 snippets for every common Liquid and Shopify theme pattern
+- **Snippets** — 55+ snippets for every common Liquid and Shopify theme pattern
 - **Document outline** — navigate to `render`/`section`/`schema`/`for`/`capture` landmarks in the outline panel
 - **Auto-indentation** — block tags (`if`, `for`, `unless`, `case`, `capture`, etc.) auto-indent their body
 - **Code folding** — fold any Liquid block tag (`if`, `for`, `schema`, `javascript`, `comment`, and more)
@@ -81,6 +84,8 @@ Configure via Zed's `settings.json`:
 | `assign` | assign variable |
 | `assignw` | assign filtered array via `where:` |
 | `assignm` | assign mapped array via `map:` |
+| `assignsort` | assign sorted array via `sort:` |
+| `assignfirst` | assign first matching item via `where: … \| first` |
 | `capture` | capture block |
 | `increment` | increment variable |
 | `decrement` | decrement variable |
@@ -96,6 +101,10 @@ Configure via Zed's `settings.json`:
 | `{{moneyc` | `{{ variable \| money_with_currency }}` |
 | `{{def` | `{{ variable \| default: 'fallback' }}` |
 | `{{trunc` | `{{ variable \| truncate: 100 }}` |
+| `{{esc` | `{{ variable \| escape }}` |
+| `{{strip` | `{{ variable \| strip_html }}` |
+| `{{handle` | `{{ variable \| handle }}` |
+| `{{size` | `{{ variable \| size }}` |
 | `t` | `{{ 'key' \| t }}` translation |
 | `echo` | `{% echo variable %}` |
 
@@ -112,6 +121,14 @@ Configure via Zed's `settings.json`:
 | `form` | form tag |
 | `layout` | layout tag |
 | `schema` | schema block with settings/presets |
+| `section-template` | full section boilerplate (HTML + schema + stylesheet + javascript) |
+| `asset` | `{{ 'file.css' \| asset_url }}` |
+| `assetlink` | asset as `<link>` stylesheet tag |
+| `imgtag` | responsive image via `image_url` + `image_tag` |
+| `scripttag` | asset as `<script>` tag |
+| `cfh` | `{{ content_for_header }}` |
+| `cfl` | `{{ content_for_layout }}` |
+| `cfi` | `{{ content_for_index }}` |
 
 ### Embedded blocks
 
@@ -123,6 +140,44 @@ Configure via Zed's `settings.json`:
 | `raw` | `{% raw %}…{% endraw %}` |
 | `comment` | `{% comment %}…{% endcomment %}` |
 | `liquid` | `{% liquid … %}` multi-statement block |
+
+## Schema JSON validation
+
+The Shopify Theme Language Server provides JSON completions and validation inside `{% schema %}` blocks automatically — no extra configuration needed.
+
+For additional JSON Schema validation (e.g. in a standalone editor or CI), point your JSON language server at Shopify's published schema:
+
+```json
+{
+  "json.schemas": [
+    {
+      "fileMatch": ["*.json"],
+      "url": "https://json.schemastore.org/shopify-section.json"
+    }
+  ]
+}
+```
+
+The LS also validates section files in `config/settings_schema.json` and `config/settings_data.json` automatically when you open a theme folder (not a single file).
+
+## Tailwind CSS
+
+To use Tailwind CSS in a Shopify theme with this extension:
+
+1. Install the [Zed Tailwind CSS extension](https://github.com/zed-industries/zed/tree/main/extensions/tailwindcss) via **zed: extensions**.
+
+2. Configure Tailwind to scan `.liquid` files in `tailwind.config.js`:
+
+   ```js
+   module.exports = {
+     content: [
+       './**/*.liquid',
+       './assets/*.js',
+     ],
+   }
+   ```
+
+3. Tailwind completions and hover docs will now work in `.liquid` files alongside Liquid completions from the Shopify LS.
 
 ## Grammar
 

@@ -5,6 +5,7 @@ use zed_extension_api::{self as zed, LanguageServerId, Result};
 const PACKAGE_NAME: &str = "@shopify/theme-language-server-node";
 const PACKAGE_ENTRY: &str = "node_modules/@shopify/theme-language-server-node/dist/index.js";
 const SERVER_WRAPPER: &str = "run_server.js";
+const PINNED_VERSION: &str = "3.0.0";
 
 struct LiquidExtension {
     cached_binary_path: Option<String>,
@@ -25,7 +26,8 @@ impl LiquidExtension {
             &zed::LanguageServerInstallationStatus::CheckingForUpdate,
         );
 
-        let version = zed::npm_package_latest_version(PACKAGE_NAME)?;
+        let version = zed::npm_package_latest_version(PACKAGE_NAME)
+            .unwrap_or_else(|_| PINNED_VERSION.to_string());
         let needs_install = !self.server_installed()
             || zed::npm_package_installed_version(PACKAGE_NAME)?.as_ref() != Some(&version);
 
