@@ -11,7 +11,10 @@ fn load_snippets() -> Value {
 fn get_prefixes(snippet: &Value) -> Vec<String> {
     match &snippet["prefix"] {
         Value::String(s) => vec![s.clone()],
-        Value::Array(arr) => arr.iter().filter_map(|v| v.as_str().map(str::to_owned)).collect(),
+        Value::Array(arr) => arr
+            .iter()
+            .filter_map(|v| v.as_str().map(str::to_owned))
+            .collect(),
         _ => vec![],
     }
 }
