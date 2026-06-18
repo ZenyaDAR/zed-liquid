@@ -5,6 +5,23 @@ All notable changes to this project will be documented in this file.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 This project uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.1] - 2026-06-18
+
+### Added
+- **Snippet expansion — 55 → 123 snippets**
+  - **Multiple trigger prefixes per block tag** — every `{% tag %}` snippet now responds to both the bare keyword (`if`, `for`, `assign`, …) and the `{%`-prefixed form (`{%if`, `{%for`, `{%assign`, …), so you can trigger completions from either style
+  - **New control-flow constructs** — `break`, `continue`, `forr` (reversed loop), `forlr` (reversed + limit/offset), `ifne` (not-empty guard), `tablerowc` (tablerow with `cols:`), `renderfor` (`render … for array as item`)
+  - **Liquid tag helpers** — `liquidb` (multi-assign `{% liquid %}` stub)
+  - **7 form-type shortcuts** — `form-contact`, `form-cart`, `form-login`, `form-register`, `form-reset`, `form-address`, `form-activate`
+  - **25 schema settings snippets** (`s-text`, `s-textarea`, `s-richtext`, `s-inlinert`, `s-number`, `s-check`, `s-range`, `s-select`, `s-radio`, `s-color`, `s-colorbg`, `s-img`, `s-video`, `s-videourl`, `s-url`, `s-html`, `s-font`, `s-linklist`, `s-product`, `s-coll`, `s-blog`, `s-page`, `s-header`, `s-para`) — insert directly inside `"settings": []`
+  - **20+ output-filter snippets** — `{{up`, `{{down`, `{{rep`, `{{app`, `{{pre`, `{{split`, `{{join`, `{{nl`, `{{url`, `{{imgurl`, `{{weight`, `{{times`, `{{minus`, `{{plus`, `{{round`, `{{floor`, `{{ceil`, `{{slice`, `{{compact`, `{{uniq`, `{{reverse`, `{{first`, `{{last`
+  - **Shopify patterns** — `prod-loop` (paginated products), `nav-loop` (linklist menu), `section-block` (blocks loop with case/when), `meta-key` (metafield access), `img-src` (responsive lazy image), `schema-full` (schema with settings + blocks + presets), `schema-block` (block definition stub)
+- **README** — expanded snippet tables covering all 123 snippets; added Hover Documentation section documenting LSP hover for Shopify objects
+- **Tests** — `snippets_test.rs` updated to support array-valued `prefix` fields
+
+### Fixed
+- `version` in `Cargo.toml` and `extension.toml` was not bumped in the v0.2.0 commit; corrected to `0.2.1`
+
 ## [0.2.0] - 2026-05-08
 
 ### Added

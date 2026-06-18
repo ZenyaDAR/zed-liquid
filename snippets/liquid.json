@@ -1,11 +1,11 @@
 {
   "if": {
-    "prefix": "if",
+    "prefix": ["if", "{%if"],
     "body": ["{% if ${1:condition} %}", "\t$0", "{% endif %}"],
     "description": "if statement"
   },
   "if/else": {
-    "prefix": "ife",
+    "prefix": ["ife", "{%ife"],
     "body": [
       "{% if ${1:condition} %}",
       "\t$2",
@@ -16,7 +16,7 @@
     "description": "if/else statement"
   },
   "if/elsif/else": {
-    "prefix": "ifee",
+    "prefix": ["ifee", "{%ifee"],
     "body": [
       "{% if ${1:condition} %}",
       "\t$2",
@@ -28,13 +28,22 @@
     ],
     "description": "if/elsif/else statement"
   },
+  "if not empty": {
+    "prefix": ["ifne", "{%ifne"],
+    "body": [
+      "{% if ${1:collection}.${2:products}.size > 0 %}",
+      "\t$0",
+      "{% endif %}"
+    ],
+    "description": "if collection/array not empty"
+  },
   "unless": {
-    "prefix": "unless",
+    "prefix": ["unless", "{%unless"],
     "body": ["{% unless ${1:condition} %}", "\t$0", "{% endunless %}"],
     "description": "unless statement"
   },
   "unless/else": {
-    "prefix": "unle",
+    "prefix": ["unle", "{%unle"],
     "body": [
       "{% unless ${1:condition} %}",
       "\t$2",
@@ -45,12 +54,12 @@
     "description": "unless/else statement"
   },
   "for": {
-    "prefix": "for",
+    "prefix": ["for", "{%for"],
     "body": ["{% for ${1:item} in ${2:collection} %}", "\t$0", "{% endfor %}"],
     "description": "for loop"
   },
   "for with limit/offset": {
-    "prefix": "forl",
+    "prefix": ["forl", "{%forl"],
     "body": [
       "{% for ${1:item} in ${2:collection} limit: ${3:5} offset: ${4:0} %}",
       "\t$0",
@@ -58,8 +67,32 @@
     ],
     "description": "for loop with limit and offset"
   },
+  "for reversed": {
+    "prefix": ["forr", "{%forr"],
+    "body": ["{% for ${1:item} in ${2:collection} reversed %}", "\t$0", "{% endfor %}"],
+    "description": "for loop reversed"
+  },
+  "for with limit/offset/reversed": {
+    "prefix": ["forlr", "{%forlr"],
+    "body": [
+      "{% for ${1:item} in ${2:collection} limit: ${3:5} offset: ${4:0} reversed %}",
+      "\t$0",
+      "{% endfor %}"
+    ],
+    "description": "for loop with limit, offset, and reversed"
+  },
+  "break": {
+    "prefix": ["break", "{%break"],
+    "body": ["{% break %}"],
+    "description": "break out of for loop"
+  },
+  "continue": {
+    "prefix": ["continue", "{%continue"],
+    "body": ["{% continue %}"],
+    "description": "skip to next iteration"
+  },
   "tablerow": {
-    "prefix": "tablerow",
+    "prefix": ["tablerow", "{%tablerow"],
     "body": [
       "{% tablerow ${1:item} in ${2:collection} %}",
       "\t$0",
@@ -67,23 +100,22 @@
     ],
     "description": "tablerow loop (renders an HTML table row per item)"
   },
+  "tablerow with cols": {
+    "prefix": ["tablerowc", "{%tablerowc"],
+    "body": [
+      "{% tablerow ${1:item} in ${2:collection} cols: ${3:3} %}",
+      "\t$0",
+      "{% endtablerow %}"
+    ],
+    "description": "tablerow loop with fixed column count"
+  },
   "cycle": {
-    "prefix": "cycle",
+    "prefix": ["cycle", "{%cycle"],
     "body": ["{% cycle '${1:one}', '${2:two}', '${3:three}' %}"],
     "description": "cycle — rotates through values on each iteration"
   },
-  "assign": {
-    "prefix": "assign",
-    "body": ["{% assign ${1:variable} = ${2:value} %}"],
-    "description": "assign variable"
-  },
-  "capture": {
-    "prefix": "capture",
-    "body": ["{% capture ${1:variable} %}", "\t$0", "{% endcapture %}"],
-    "description": "capture block"
-  },
   "case/when": {
-    "prefix": "case",
+    "prefix": ["case", "{%case"],
     "body": [
       "{% case ${1:variable} %}",
       "  {% when ${2:value} %}",
@@ -94,117 +126,45 @@
     ],
     "description": "case/when statement"
   },
-  "include": {
-    "prefix": "include",
-    "body": ["{% include '${1:snippet}'${2:, ${3:param}: ${4:value}} %}"],
-    "description": "include snippet (deprecated — prefer render)"
+  "assign": {
+    "prefix": ["assign", "{%assign"],
+    "body": ["{% assign ${1:variable} = ${2:value} %}"],
+    "description": "assign variable"
   },
-  "render": {
-    "prefix": "render",
-    "body": ["{% render '${1:snippet}'${2:, ${3:param}: ${4:value}} %}"],
-    "description": "render snippet"
+  "capture": {
+    "prefix": ["capture", "{%capture"],
+    "body": ["{% capture ${1:variable} %}", "\t$0", "{% endcapture %}"],
+    "description": "capture block"
   },
-  "render with": {
-    "prefix": "renderw",
-    "body": [
-      "{% render '${1:snippet}', ${2:param}: ${3:value} %}"
-    ],
-    "description": "render snippet with parameter"
+  "assign where": {
+    "prefix": "assignw",
+    "body": ["{% assign ${1:result} = ${2:collection} | where: '${3:property}', '${4:value}' %}"],
+    "description": "assign filtered array using where filter"
   },
-  "section": {
-    "prefix": "section",
-    "body": ["{% section '${1:name}' %}"],
-    "description": "section tag"
+  "assign map": {
+    "prefix": "assignm",
+    "body": ["{% assign ${1:result} = ${2:collection} | map: '${3:property}' %}"],
+    "description": "assign mapped array of a single property"
   },
-  "sections": {
-    "prefix": "sections",
-    "body": ["{% sections '${1:name}' %}"],
-    "description": "sections tag"
+  "assign sort": {
+    "prefix": "assignsort",
+    "body": ["{% assign ${1:result} = ${2:array} | sort: '${3:property}' %}"],
+    "description": "sorted array"
   },
-  "paginate": {
-    "prefix": "paginate",
-    "body": [
-      "{% paginate ${1:collection} by ${2:12} %}",
-      "\t$0",
-      "{% endpaginate %}"
-    ],
-    "description": "paginate block"
-  },
-  "comment": {
-    "prefix": "comment",
-    "body": ["{% comment %}", "\t$0", "{% endcomment %}"],
-    "description": "comment block"
-  },
-  "raw": {
-    "prefix": "raw",
-    "body": ["{% raw %}", "\t$0", "{% endraw %}"],
-    "description": "raw block (no Liquid processing)"
-  },
-  "schema": {
-    "prefix": "schema",
-    "body": [
-      "{% schema %}",
-      "{",
-      "\t\"name\": \"${1:Section name}\",",
-      "\t\"settings\": [",
-      "\t\t$0",
-      "\t],",
-      "\t\"presets\": [",
-      "\t\t{ \"name\": \"${2:Default}\" }",
-      "\t]",
-      "}",
-      "{% endschema %}"
-    ],
-    "description": "schema block"
-  },
-  "javascript": {
-    "prefix": "javascript",
-    "body": ["{% javascript %}", "\t$0", "{% endjavascript %}"],
-    "description": "javascript block"
-  },
-  "stylesheet": {
-    "prefix": "stylesheet",
-    "body": ["{% stylesheet %}", "\t$0", "{% endstylesheet %}"],
-    "description": "stylesheet block"
-  },
-  "style": {
-    "prefix": "style",
-    "body": ["{% style %}", "\t$0", "{% endstyle %}"],
-    "description": "style block"
-  },
-  "echo": {
-    "prefix": "echo",
-    "body": ["{% echo ${1:variable} %}"],
-    "description": "echo tag"
-  },
-  "liquid tag": {
-    "prefix": "liquid",
-    "body": [
-      "{% liquid",
-      "\t${1:assign var = 'value'}",
-      "%}"
-    ],
-    "description": "liquid tag (multiple statements)"
+  "assign first": {
+    "prefix": "assignfirst",
+    "body": ["{% assign ${1:result} = ${2:array} | where: '${3:prop}', '${4:val}' | first %}"],
+    "description": "first matching item"
   },
   "increment": {
-    "prefix": "increment",
+    "prefix": ["increment", "{%increment"],
     "body": ["{% increment ${1:variable} %}"],
     "description": "increment variable"
   },
   "decrement": {
-    "prefix": "decrement",
+    "prefix": ["decrement", "{%decrement"],
     "body": ["{% decrement ${1:variable} %}"],
     "description": "decrement variable"
-  },
-  "layout": {
-    "prefix": "layout",
-    "body": ["{% layout ${1:'theme'} %}"],
-    "description": "layout tag"
-  },
-  "form": {
-    "prefix": "form",
-    "body": ["{% form '${1:type}'${2:, ${3:object}} %}", "\t$0", "{% endform %}"],
-    "description": "form tag"
   },
   "output variable": {
     "prefix": "{{",
@@ -220,6 +180,11 @@
     "prefix": "t",
     "body": ["{{ '${1:key}' | t }}"],
     "description": "translation filter"
+  },
+  "echo": {
+    "prefix": ["echo", "{%echo"],
+    "body": ["{% echo ${1:variable} %}"],
+    "description": "echo tag"
   },
   "date filter": {
     "prefix": "{{date",
@@ -246,15 +211,288 @@
     "body": ["{{ ${1:variable} | truncate: ${2:100} }}"],
     "description": "output variable truncated to N characters"
   },
-  "assign where": {
-    "prefix": "assignw",
-    "body": ["{% assign ${1:result} = ${2:collection} | where: '${3:property}', '${4:value}' %}"],
-    "description": "assign filtered array using where filter"
+  "escape filter": {
+    "prefix": "{{esc",
+    "body": ["{{ ${1:variable} | escape }}"],
+    "description": "HTML-escape output"
   },
-  "assign map": {
-    "prefix": "assignm",
-    "body": ["{% assign ${1:result} = ${2:collection} | map: '${3:property}' %}"],
-    "description": "assign mapped array of a single property"
+  "strip_html filter": {
+    "prefix": "{{strip",
+    "body": ["{{ ${1:variable} | strip_html }}"],
+    "description": "strip HTML tags"
+  },
+  "handle filter": {
+    "prefix": "{{handle",
+    "body": ["{{ ${1:variable} | handle }}"],
+    "description": "URL-safe handle"
+  },
+  "size filter": {
+    "prefix": "{{size",
+    "body": ["{{ ${1:variable} | size }}"],
+    "description": "count of array/string"
+  },
+  "upcase filter": {
+    "prefix": "{{up",
+    "body": ["{{ ${1:variable} | upcase }}"],
+    "description": "convert to uppercase"
+  },
+  "downcase filter": {
+    "prefix": "{{down",
+    "body": ["{{ ${1:variable} | downcase }}"],
+    "description": "convert to lowercase"
+  },
+  "replace filter": {
+    "prefix": "{{rep",
+    "body": ["{{ ${1:variable} | replace: '${2:from}', '${3:to}' }}"],
+    "description": "replace substring"
+  },
+  "append filter": {
+    "prefix": "{{app",
+    "body": ["{{ ${1:variable} | append: '${2:suffix}' }}"],
+    "description": "append string"
+  },
+  "prepend filter": {
+    "prefix": "{{pre",
+    "body": ["{{ ${1:variable} | prepend: '${2:prefix}' }}"],
+    "description": "prepend string"
+  },
+  "split filter": {
+    "prefix": "{{split",
+    "body": ["{% assign ${1:array} = ${2:variable} | split: '${3:,}' %}"],
+    "description": "split string into array"
+  },
+  "join filter": {
+    "prefix": "{{join",
+    "body": ["{{ ${1:array} | join: '${2:, }' }}"],
+    "description": "join array into string"
+  },
+  "newline_to_br filter": {
+    "prefix": "{{nl",
+    "body": ["{{ ${1:variable} | newline_to_br }}"],
+    "description": "convert newlines to <br> tags"
+  },
+  "url_encode filter": {
+    "prefix": "{{url",
+    "body": ["{{ ${1:variable} | url_encode }}"],
+    "description": "URL-encode string"
+  },
+  "image_url filter": {
+    "prefix": "{{imgurl",
+    "body": ["{{ ${1:image} | image_url: width: ${2:800} }}"],
+    "description": "generate image URL at given width"
+  },
+  "weight_with_unit filter": {
+    "prefix": "{{weight",
+    "body": ["{{ ${1:variant.weight} | weight_with_unit }}"],
+    "description": "format weight with unit"
+  },
+  "times filter": {
+    "prefix": "{{times",
+    "body": ["{{ ${1:variable} | times: ${2:2} }}"],
+    "description": "multiply"
+  },
+  "minus filter": {
+    "prefix": "{{minus",
+    "body": ["{{ ${1:variable} | minus: ${2:1} }}"],
+    "description": "subtract"
+  },
+  "plus filter": {
+    "prefix": "{{plus",
+    "body": ["{{ ${1:variable} | plus: ${2:1} }}"],
+    "description": "add"
+  },
+  "round filter": {
+    "prefix": "{{round",
+    "body": ["{{ ${1:variable} | round: ${2:2} }}"],
+    "description": "round to N decimal places"
+  },
+  "floor filter": {
+    "prefix": "{{floor",
+    "body": ["{{ ${1:variable} | floor }}"],
+    "description": "round down"
+  },
+  "ceil filter": {
+    "prefix": "{{ceil",
+    "body": ["{{ ${1:variable} | ceil }}"],
+    "description": "round up"
+  },
+  "slice filter": {
+    "prefix": "{{slice",
+    "body": ["{{ ${1:variable} | slice: ${2:0}, ${3:5} }}"],
+    "description": "slice array or string"
+  },
+  "compact filter": {
+    "prefix": "{{compact",
+    "body": ["{% assign ${1:result} = ${2:array} | compact %}"],
+    "description": "remove nil values from array"
+  },
+  "uniq filter": {
+    "prefix": "{{uniq",
+    "body": ["{% assign ${1:result} = ${2:array} | uniq %}"],
+    "description": "remove duplicate values from array"
+  },
+  "reverse filter": {
+    "prefix": "{{reverse",
+    "body": ["{% assign ${1:result} = ${2:array} | reverse %}"],
+    "description": "reverse array order"
+  },
+  "first filter": {
+    "prefix": "{{first",
+    "body": ["{{ ${1:array} | first }}"],
+    "description": "first item of array"
+  },
+  "last filter": {
+    "prefix": "{{last",
+    "body": ["{{ ${1:array} | last }}"],
+    "description": "last item of array"
+  },
+  "include": {
+    "prefix": ["include", "{%include"],
+    "body": ["{% include '${1:snippet}'${2:, ${3:param}: ${4:value}} %}"],
+    "description": "include snippet (deprecated — prefer render)"
+  },
+  "render": {
+    "prefix": ["render", "{%render"],
+    "body": ["{% render '${1:snippet}'${2:, ${3:param}: ${4:value}} %}"],
+    "description": "render snippet"
+  },
+  "render with": {
+    "prefix": "renderw",
+    "body": [
+      "{% render '${1:snippet}', ${2:param}: ${3:value} %}"
+    ],
+    "description": "render snippet with parameter"
+  },
+  "render for": {
+    "prefix": ["renderfor", "{%renderfor"],
+    "body": ["{% render '${1:snippet}' for ${2:array} as ${3:item} %}"],
+    "description": "render snippet for each item in array"
+  },
+  "section": {
+    "prefix": ["section", "{%section"],
+    "body": ["{% section '${1:name}' %}"],
+    "description": "section tag"
+  },
+  "sections": {
+    "prefix": ["sections", "{%sections"],
+    "body": ["{% sections '${1:name}' %}"],
+    "description": "sections tag"
+  },
+  "paginate": {
+    "prefix": ["paginate", "{%paginate"],
+    "body": [
+      "{% paginate ${1:collection} by ${2:12} %}",
+      "\t$0",
+      "{% endpaginate %}"
+    ],
+    "description": "paginate block"
+  },
+  "form": {
+    "prefix": ["form", "{%form"],
+    "body": ["{% form '${1:type}'${2:, ${3:object}} %}", "\t$0", "{% endform %}"],
+    "description": "form tag"
+  },
+  "form contact": {
+    "prefix": "form-contact",
+    "body": ["{% form 'contact' %}", "\t$0", "{% endform %}"],
+    "description": "contact form"
+  },
+  "form cart": {
+    "prefix": "form-cart",
+    "body": ["{% form 'cart', cart %}", "\t$0", "{% endform %}"],
+    "description": "cart form"
+  },
+  "form login": {
+    "prefix": "form-login",
+    "body": ["{% form 'customer_login' %}", "\t$0", "{% endform %}"],
+    "description": "customer login form"
+  },
+  "form register": {
+    "prefix": "form-register",
+    "body": ["{% form 'create_customer' %}", "\t$0", "{% endform %}"],
+    "description": "customer registration form"
+  },
+  "form reset password": {
+    "prefix": "form-reset",
+    "body": ["{% form 'reset_customer_password' %}", "\t$0", "{% endform %}"],
+    "description": "reset customer password form"
+  },
+  "form address": {
+    "prefix": "form-address",
+    "body": ["{% form 'customer_address', customer.${1:new_address} %}", "\t$0", "{% endform %}"],
+    "description": "customer address form"
+  },
+  "form activate": {
+    "prefix": "form-activate",
+    "body": ["{% form 'activate_customer_password' %}", "\t$0", "{% endform %}"],
+    "description": "activate customer account form"
+  },
+  "layout": {
+    "prefix": ["layout", "{%layout"],
+    "body": ["{% layout ${1:'theme'} %}"],
+    "description": "layout tag"
+  },
+  "comment": {
+    "prefix": ["comment", "{%comment"],
+    "body": ["{% comment %}", "\t$0", "{% endcomment %}"],
+    "description": "comment block"
+  },
+  "raw": {
+    "prefix": ["raw", "{%raw"],
+    "body": ["{% raw %}", "\t$0", "{% endraw %}"],
+    "description": "raw block (no Liquid processing)"
+  },
+  "liquid tag": {
+    "prefix": ["liquid", "{%liquid"],
+    "body": [
+      "{% liquid",
+      "\t${1:assign var = 'value'}",
+      "%}"
+    ],
+    "description": "liquid tag (multiple statements)"
+  },
+  "liquid tag batch": {
+    "prefix": ["liquidb", "{%liquidb"],
+    "body": [
+      "{% liquid",
+      "\tassign ${1:var1} = ${2:value1}",
+      "\tassign ${3:var2} = ${4:value2}",
+      "\t$0",
+      "%}"
+    ],
+    "description": "liquid tag with multiple assign statements"
+  },
+  "javascript": {
+    "prefix": ["javascript", "{%javascript"],
+    "body": ["{% javascript %}", "\t$0", "{% endjavascript %}"],
+    "description": "javascript block"
+  },
+  "stylesheet": {
+    "prefix": ["stylesheet", "{%stylesheet"],
+    "body": ["{% stylesheet %}", "\t$0", "{% endstylesheet %}"],
+    "description": "stylesheet block"
+  },
+  "style": {
+    "prefix": ["style", "{%style"],
+    "body": ["{% style %}", "\t$0", "{% endstyle %}"],
+    "description": "style block"
+  },
+  "schema": {
+    "prefix": ["schema", "{%schema"],
+    "body": [
+      "{% schema %}",
+      "{",
+      "\t\"name\": \"${1:Section name}\",",
+      "\t\"settings\": [",
+      "\t\t$0",
+      "\t],",
+      "\t\"presets\": [",
+      "\t\t{ \"name\": \"${2:Default}\" }",
+      "\t]",
+      "}",
+      "{% endschema %}"
+    ],
+    "description": "schema block"
   },
   "asset url": {
     "prefix": "asset",
@@ -268,7 +506,7 @@
   },
   "image_tag": {
     "prefix": "imgtag",
-    "body": ["{{ ${1:image} | image_url: width: ${2:800} | image_tag: alt: '${3:alt}' }}"],
+    "body": ["{{ ${1:image} | image_url: width: ${2:800} | image_tag: alt: ${1:image}.alt, loading: 'lazy', width: ${2:800} }}"],
     "description": "responsive image with image_url + image_tag"
   },
   "content_for_header": {
@@ -291,35 +529,291 @@
     "body": ["{{ '${1:app.js}' | asset_url | script_tag }}"],
     "description": "output asset as <script> tag"
   },
-  "escape filter": {
-    "prefix": "{{esc",
-    "body": ["{{ ${1:variable} | escape }}"],
-    "description": "HTML-escape output"
+  "schema setting text": {
+    "prefix": "s-text",
+    "body": [
+      "{",
+      "\t\"type\": \"text\",",
+      "\t\"id\": \"${1:id}\",",
+      "\t\"label\": \"${2:Label}\",",
+      "\t\"default\": \"${3:}\"",
+      "}"
+    ],
+    "description": "schema: text input setting"
   },
-  "strip_html filter": {
-    "prefix": "{{strip",
-    "body": ["{{ ${1:variable} | strip_html }}"],
-    "description": "strip HTML tags"
+  "schema setting textarea": {
+    "prefix": "s-textarea",
+    "body": [
+      "{",
+      "\t\"type\": \"textarea\",",
+      "\t\"id\": \"${1:id}\",",
+      "\t\"label\": \"${2:Label}\",",
+      "\t\"default\": \"${3:}\"",
+      "}"
+    ],
+    "description": "schema: textarea setting"
   },
-  "handle filter": {
-    "prefix": "{{handle",
-    "body": ["{{ ${1:variable} | handle }}"],
-    "description": "URL-safe handle"
+  "schema setting richtext": {
+    "prefix": "s-richtext",
+    "body": [
+      "{",
+      "\t\"type\": \"richtext\",",
+      "\t\"id\": \"${1:id}\",",
+      "\t\"label\": \"${2:Label}\",",
+      "\t\"default\": \"<p>${3:}</p>\"",
+      "}"
+    ],
+    "description": "schema: richtext setting"
   },
-  "size filter": {
-    "prefix": "{{size",
-    "body": ["{{ ${1:variable} | size }}"],
-    "description": "count of array/string"
+  "schema setting inline richtext": {
+    "prefix": "s-inlinert",
+    "body": [
+      "{",
+      "\t\"type\": \"inline_richtext\",",
+      "\t\"id\": \"${1:id}\",",
+      "\t\"label\": \"${2:Label}\",",
+      "\t\"default\": \"${3:}\"",
+      "}"
+    ],
+    "description": "schema: inline richtext setting"
   },
-  "assign sort": {
-    "prefix": "assignsort",
-    "body": ["{% assign ${1:result} = ${2:array} | sort: '${3:property}' %}"],
-    "description": "sorted array"
+  "schema setting number": {
+    "prefix": "s-number",
+    "body": [
+      "{",
+      "\t\"type\": \"number\",",
+      "\t\"id\": \"${1:id}\",",
+      "\t\"label\": \"${2:Label}\",",
+      "\t\"default\": ${3:0}",
+      "}"
+    ],
+    "description": "schema: number setting"
   },
-  "assign first": {
-    "prefix": "assignfirst",
-    "body": ["{% assign ${1:result} = ${2:array} | where: '${3:prop}', '${4:val}' | first %}"],
-    "description": "first matching item"
+  "schema setting checkbox": {
+    "prefix": "s-check",
+    "body": [
+      "{",
+      "\t\"type\": \"checkbox\",",
+      "\t\"id\": \"${1:id}\",",
+      "\t\"label\": \"${2:Label}\",",
+      "\t\"default\": ${3:false}",
+      "}"
+    ],
+    "description": "schema: checkbox setting"
+  },
+  "schema setting range": {
+    "prefix": "s-range",
+    "body": [
+      "{",
+      "\t\"type\": \"range\",",
+      "\t\"id\": \"${1:id}\",",
+      "\t\"label\": \"${2:Label}\",",
+      "\t\"min\": ${3:1},",
+      "\t\"max\": ${4:10},",
+      "\t\"step\": ${5:1},",
+      "\t\"default\": ${6:5}",
+      "}"
+    ],
+    "description": "schema: range slider setting"
+  },
+  "schema setting select": {
+    "prefix": "s-select",
+    "body": [
+      "{",
+      "\t\"type\": \"select\",",
+      "\t\"id\": \"${1:id}\",",
+      "\t\"label\": \"${2:Label}\",",
+      "\t\"default\": \"${3:option_1}\",",
+      "\t\"options\": [",
+      "\t\t{ \"value\": \"${3:option_1}\", \"label\": \"${4:Option 1}\" },",
+      "\t\t{ \"value\": \"${5:option_2}\", \"label\": \"${6:Option 2}\" }",
+      "\t]",
+      "}"
+    ],
+    "description": "schema: select (dropdown) setting"
+  },
+  "schema setting radio": {
+    "prefix": "s-radio",
+    "body": [
+      "{",
+      "\t\"type\": \"radio\",",
+      "\t\"id\": \"${1:id}\",",
+      "\t\"label\": \"${2:Label}\",",
+      "\t\"default\": \"${3:option_1}\",",
+      "\t\"options\": [",
+      "\t\t{ \"value\": \"${3:option_1}\", \"label\": \"${4:Option 1}\" },",
+      "\t\t{ \"value\": \"${5:option_2}\", \"label\": \"${6:Option 2}\" }",
+      "\t]",
+      "}"
+    ],
+    "description": "schema: radio button setting"
+  },
+  "schema setting color": {
+    "prefix": "s-color",
+    "body": [
+      "{",
+      "\t\"type\": \"color\",",
+      "\t\"id\": \"${1:id}\",",
+      "\t\"label\": \"${2:Label}\",",
+      "\t\"default\": \"${3:#000000}\"",
+      "}"
+    ],
+    "description": "schema: color picker setting"
+  },
+  "schema setting color background": {
+    "prefix": "s-colorbg",
+    "body": [
+      "{",
+      "\t\"type\": \"color_background\",",
+      "\t\"id\": \"${1:id}\",",
+      "\t\"label\": \"${2:Background}\"",
+      "}"
+    ],
+    "description": "schema: color_background (gradient) setting"
+  },
+  "schema setting image picker": {
+    "prefix": "s-img",
+    "body": [
+      "{",
+      "\t\"type\": \"image_picker\",",
+      "\t\"id\": \"${1:id}\",",
+      "\t\"label\": \"${2:Image}\"",
+      "}"
+    ],
+    "description": "schema: image picker setting"
+  },
+  "schema setting video": {
+    "prefix": "s-video",
+    "body": [
+      "{",
+      "\t\"type\": \"video\",",
+      "\t\"id\": \"${1:id}\",",
+      "\t\"label\": \"${2:Video}\"",
+      "}"
+    ],
+    "description": "schema: video setting"
+  },
+  "schema setting video url": {
+    "prefix": "s-videourl",
+    "body": [
+      "{",
+      "\t\"type\": \"video_url\",",
+      "\t\"id\": \"${1:id}\",",
+      "\t\"label\": \"${2:Video URL}\",",
+      "\t\"accept\": [\"youtube\", \"vimeo\"]",
+      "}"
+    ],
+    "description": "schema: video URL (YouTube/Vimeo) setting"
+  },
+  "schema setting url": {
+    "prefix": "s-url",
+    "body": [
+      "{",
+      "\t\"type\": \"url\",",
+      "\t\"id\": \"${1:id}\",",
+      "\t\"label\": \"${2:URL}\"",
+      "}"
+    ],
+    "description": "schema: URL setting"
+  },
+  "schema setting html": {
+    "prefix": "s-html",
+    "body": [
+      "{",
+      "\t\"type\": \"html\",",
+      "\t\"id\": \"${1:id}\",",
+      "\t\"label\": \"${2:HTML}\",",
+      "\t\"default\": \"${3:}\"",
+      "}"
+    ],
+    "description": "schema: HTML setting"
+  },
+  "schema setting font picker": {
+    "prefix": "s-font",
+    "body": [
+      "{",
+      "\t\"type\": \"font_picker\",",
+      "\t\"id\": \"${1:id}\",",
+      "\t\"label\": \"${2:Font}\",",
+      "\t\"default\": \"${3:helvetica_n4}\"",
+      "}"
+    ],
+    "description": "schema: font picker setting"
+  },
+  "schema setting link list": {
+    "prefix": "s-linklist",
+    "body": [
+      "{",
+      "\t\"type\": \"link_list\",",
+      "\t\"id\": \"${1:id}\",",
+      "\t\"label\": \"${2:Menu}\"",
+      "}"
+    ],
+    "description": "schema: link list (menu) setting"
+  },
+  "schema setting product": {
+    "prefix": "s-product",
+    "body": [
+      "{",
+      "\t\"type\": \"product\",",
+      "\t\"id\": \"${1:id}\",",
+      "\t\"label\": \"${2:Product}\"",
+      "}"
+    ],
+    "description": "schema: product picker setting"
+  },
+  "schema setting collection": {
+    "prefix": "s-coll",
+    "body": [
+      "{",
+      "\t\"type\": \"collection\",",
+      "\t\"id\": \"${1:id}\",",
+      "\t\"label\": \"${2:Collection}\"",
+      "}"
+    ],
+    "description": "schema: collection picker setting"
+  },
+  "schema setting blog": {
+    "prefix": "s-blog",
+    "body": [
+      "{",
+      "\t\"type\": \"blog\",",
+      "\t\"id\": \"${1:id}\",",
+      "\t\"label\": \"${2:Blog}\"",
+      "}"
+    ],
+    "description": "schema: blog picker setting"
+  },
+  "schema setting page": {
+    "prefix": "s-page",
+    "body": [
+      "{",
+      "\t\"type\": \"page\",",
+      "\t\"id\": \"${1:id}\",",
+      "\t\"label\": \"${2:Page}\"",
+      "}"
+    ],
+    "description": "schema: page picker setting"
+  },
+  "schema setting header": {
+    "prefix": "s-header",
+    "body": [
+      "{",
+      "\t\"type\": \"header\",",
+      "\t\"content\": \"${1:Section header}\"",
+      "}"
+    ],
+    "description": "schema: header (informational, no value)"
+  },
+  "schema setting paragraph": {
+    "prefix": "s-para",
+    "body": [
+      "{",
+      "\t\"type\": \"paragraph\",",
+      "\t\"content\": \"${1:Informational text.}\"",
+      "}"
+    ],
+    "description": "schema: paragraph (informational, no value)"
   },
   "full section template": {
     "prefix": "section-template",
@@ -345,5 +839,91 @@
       "{% endjavascript %}"
     ],
     "description": "full Shopify section boilerplate"
+  },
+  "full schema": {
+    "prefix": "schema-full",
+    "body": [
+      "{% schema %}",
+      "{",
+      "\t\"name\": \"${1:Section Name}\",",
+      "\t\"tag\": \"section\",",
+      "\t\"class\": \"${2:section-class}\",",
+      "\t\"settings\": [",
+      "\t\t$3",
+      "\t],",
+      "\t\"blocks\": [",
+      "\t\t$4",
+      "\t],",
+      "\t\"presets\": [",
+      "\t\t{ \"name\": \"${1:Section Name}\" }",
+      "\t]",
+      "}",
+      "{% endschema %}"
+    ],
+    "description": "full schema with settings, blocks, and presets"
+  },
+  "schema block definition": {
+    "prefix": "schema-block",
+    "body": [
+      "{",
+      "\t\"type\": \"${1:block_type}\",",
+      "\t\"name\": \"${2:Block Name}\",",
+      "\t\"settings\": [",
+      "\t\t$0",
+      "\t]",
+      "}"
+    ],
+    "description": "block definition inside schema blocks array"
+  },
+  "products loop with paginate": {
+    "prefix": "prod-loop",
+    "body": [
+      "{% paginate ${1:collection}.products by ${2:12} %}",
+      "\t{% for product in ${1:collection}.products %}",
+      "\t\t$0",
+      "\t{% endfor %}",
+      "\t{{ paginate | default_pagination }}",
+      "{% endpaginate %}"
+    ],
+    "description": "paginated products loop"
+  },
+  "navigation links loop": {
+    "prefix": "nav-loop",
+    "body": [
+      "{% for link in linklists.${1:main-menu}.links %}",
+      "\t<a href=\"{{ link.url }}\"{% if link.active %} class=\"active\"{% endif %}>",
+      "\t\t{{ link.title }}",
+      "\t</a>",
+      "{% endfor %}"
+    ],
+    "description": "navigation menu links loop"
+  },
+  "section blocks loop": {
+    "prefix": "section-block",
+    "body": [
+      "{% for block in section.blocks %}",
+      "\t{% case block.type %}",
+      "\t\t{% when '${1:block_type}' %}",
+      "\t\t\t$0",
+      "\t{% endcase %}",
+      "\t{{ block.shopify_attributes }}",
+      "{% endfor %}"
+    ],
+    "description": "loop through section blocks with case/when"
+  },
+  "metafield access": {
+    "prefix": "meta-key",
+    "body": ["{{ ${1:product}.metafields.${2:namespace}.${3:key} | metafield_tag }}"],
+    "description": "access and render a metafield value"
+  },
+  "responsive image": {
+    "prefix": "img-src",
+    "body": [
+      "{{ ${1:image} | image_url: width: ${2:800} | image_tag:",
+      "\talt: ${1:image}.alt,",
+      "\tloading: 'lazy',",
+      "\twidth: ${2:800} }}"
+    ],
+    "description": "responsive image with lazy loading"
   }
 }

@@ -7,6 +7,15 @@ fn load_snippets() -> Value {
     serde_json::from_str(&content).expect("snippets/liquid.json is not valid JSON")
 }
 
+// prefix may be a string or an array of strings
+fn get_prefixes(snippet: &Value) -> Vec<String> {
+    match &snippet["prefix"] {
+        Value::String(s) => vec![s.clone()],
+        Value::Array(arr) => arr.iter().filter_map(|v| v.as_str().map(str::to_owned)).collect(),
+        _ => vec![],
+    }
+}
+
 #[test]
 fn snippets_json_is_valid_object() {
     let snippets = load_snippets();
@@ -19,7 +28,7 @@ fn every_snippet_has_required_fields() {
     let snippets = load_snippets();
     for (name, snippet) in snippets.as_object().unwrap() {
         assert!(
-            snippet["prefix"].is_string(),
+            snippet["prefix"].is_string() || snippet["prefix"].is_array(),
             "snippet '{name}' missing 'prefix'"
         );
         assert!(
@@ -45,8 +54,11 @@ fn every_snippet_has_required_fields() {
 fn every_snippet_prefix_is_non_empty() {
     let snippets = load_snippets();
     for (name, snippet) in snippets.as_object().unwrap() {
-        let prefix = snippet["prefix"].as_str().unwrap();
-        assert!(!prefix.is_empty(), "snippet '{name}' has an empty prefix");
+        let prefixes = get_prefixes(snippet);
+        assert!(!prefixes.is_empty(), "snippet '{name}' has no prefixes");
+        for prefix in &prefixes {
+            assert!(!prefix.is_empty(), "snippet '{name}' has an empty prefix");
+        }
     }
 }
 
@@ -151,13 +163,14 @@ fn tab_stops_are_valid() {
 #[test]
 fn no_duplicate_prefixes() {
     let snippets = load_snippets();
-    let mut seen: std::collections::HashMap<&str, &str> = std::collections::HashMap::new();
+    let mut seen: std::collections::HashMap<String, String> = std::collections::HashMap::new();
     for (name, snippet) in snippets.as_object().unwrap() {
-        let prefix = snippet["prefix"].as_str().unwrap();
-        if let Some(existing) = seen.get(prefix) {
-            panic!("duplicate prefix '{prefix}' used by both '{existing}' and '{name}'");
+        for prefix in get_prefixes(snippet) {
+            if let Some(existing) = seen.get(&prefix) {
+                panic!("duplicate prefix '{prefix}' used by both '{existing}' and '{name}'");
+            }
+            seen.insert(prefix, name.clone());
         }
-        seen.insert(prefix, name.as_str());
     }
 }
 
@@ -189,11 +202,12 @@ fn liquid_tags_are_properly_closed() {
 fn prefixes_do_not_contain_spaces() {
     let snippets = load_snippets();
     for (name, snippet) in snippets.as_object().unwrap() {
-        let prefix = snippet["prefix"].as_str().unwrap();
-        assert!(
-            !prefix.contains(' '),
-            "snippet '{name}' has invalid prefix '{prefix}': prefixes should not contain spaces"
-        );
+        for prefix in get_prefixes(snippet) {
+            assert!(
+                !prefix.contains(' '),
+                "snippet '{name}' has invalid prefix '{prefix}': prefixes should not contain spaces"
+            );
+        }
     }
 }
 

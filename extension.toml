@@ -1,7 +1,7 @@
 id = "liquid"
 name = "Liquid"
 description = "Liquid template language support for Shopify theme development — syntax highlighting, autocomplete, hover docs, diagnostics, embedded HTML/CSS/JS/JSON."
-version = "0.1.0"
+version = "0.2.1"
 schema_version = 1
 authors = ["Yevhenii Dziza <dziza12345@gmail.com>"]
 repository = "https://github.com/ZenyaDAR/zed-liquid"
