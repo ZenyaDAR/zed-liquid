@@ -1,4 +1,4 @@
-id = "liquid"
+id = "shopify-liquid-ls"
 name = "Liquid"
 description = "Liquid template language support for Shopify theme development — syntax highlighting, autocomplete, hover docs, diagnostics, embedded HTML/CSS/JS/JSON."
 version = "0.2.1"
