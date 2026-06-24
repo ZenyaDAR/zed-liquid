@@ -27,7 +27,10 @@ fn required_files_exist() {
 #[test]
 fn extension_toml_has_correct_structure() {
     let content = fs::read_to_string("extension.toml").unwrap();
-    assert!(content.contains(r#"id = "liquid""#), "missing id");
+    assert!(
+        content.contains(r#"id = "shopify-liquid-ls""#),
+        "missing id"
+    );
     assert!(
         content.contains("[grammars.liquid]"),
         "missing grammar declaration"
